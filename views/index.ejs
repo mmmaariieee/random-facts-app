@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Random Facts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1>Random Facts</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/favorites">Favorites</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>Get a random fact</h2>
+
+            <form action="/fact" method="POST" class="fact-form">
+                <div class="form-row">
+                    <label for="factType">Fact type:</label>
+                    <select name="factType" id="factType">
+                        <option value="random">Random</option>
+                        <option value="today">Today</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <label for="language">Language:</label>
+                    <select name="language" id="language">
+                        <option value="en">English</option>
+                        <option value="de">German</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="primary-button">Get fact</button>
+            </form>
+
+            <% if (error) { %>
+                <p class="error"><%= error %></p>
+            <% } %>
+        </section>
+
+        <% if (fact) { %>
+            <section class="card fact-card">
+                <h2>Your random fact</h2>
+                <p class="fact-text"><%= fact.text %></p>
+
+                <p class="meta">
+                    <span>Type: <strong><%= fact.type %></strong></span>
+                    <span>Language: <strong><%= fact.language %></strong></span>
+                    <% if (fact.source) { %>
+                        <span>Source: <%= fact.source %></span>
+                    <% } %>
+                    <% if (fact.sourceUrl) { %>
+                        <span>
+                            <a href="<%= fact.sourceUrl %>" target="_blank" rel="noopener noreferrer">Open source</a>
+                        </span>
+                    <% } %>
+                </p>
+
+                <form action="/favorites/add" method="POST" class="favorite-form">
+                    <input type="hidden" name="text" value="<%- fact.text %>">
+                    <input type="hidden" name="language" value="<%= fact.language %>">
+                    <input type="hidden" name="type" value="<%= fact.type %>">
+                    <input type="hidden" name="source" value="<%= fact.source %>">
+                    <input type="hidden" name="sourceUrl" value="<%= fact.sourceUrl %>">
+
+                    <button type="submit" class="star-button" title="Add to favorites">
+                        ★ Add to favorites
+                    </button>
+                </form>
+            </section>
+        <% } %>
+    </main>
+</body>
+
+</html>
